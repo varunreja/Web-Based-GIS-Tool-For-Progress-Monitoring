@@ -1,0 +1,5 @@
+Route_Start,Latitude_1,Longitude_1,Route_End,Latitude_2,Longitude_2,Intermediate_1,Lat_1,Long_1,Intermediate_2,Lat_2,Long_2,Status,Status_value,Cable_Drum_Number,Date
+IITM Main Gate,13.00654732,80.24236157,Gandhi Mandapam,13.00669761,80.23706814,point1,13.00654732,80.24236157,point2,13.00654732,80.24236157,Yet to Start,0,CD001,21-Nov-2020
+Dept of Civil Engg,12.99056769,80.22900103,Back Gate,12.98792159,80.22312787,point1,13.00731411,80.23749536,point2,13.01133677,80.22324391,Laying in Progress,1,CD002,21-Nov-2020
+Gajendra Circl,12.99165211,80.23364579,Jalakanteswar Temple,12.99974353,80.24210012,point1,12.99608981,80.23809242,point2,12.99974353,80.24210012,Completed Laying,2,CD003,21-Nov-2020
+Dept of Chemistry,12.98788745,80.23203916,Structural Engg Lab,12.99020762,80.22754038,point1,12.98829971,80.2300758,point2,12.98911636,80.22820363,Laying in Progress,1,CD004,21-Nov-2020

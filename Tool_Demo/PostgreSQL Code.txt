@@ -1,0 +1,30 @@
+CREATE TABLE data_collected
+	(
+	  Route_Start character varying(50),
+	  Latitude_1 numeric,
+	  Longitude_1 numeric,
+	  Route_End character varying(50),
+	  Latitude_2 numeric,
+	  Longitude_2 numeric,
+      Intermediate_1 character varying(50),
+      Lat_1 numeric,
+      Long_1 numeric,
+      Intermediate_2 character varying(50),
+      Lat_2 numeric,
+      Long_2 numeric,
+	  Status character varying(25),
+	  Status_value numeric,
+	  Cable_Drum_Number character varying(50),
+	  Date date  
+	);
+	
+CREATE EXTENSION postgis;
+
+ALTER TABLE data_collected
+	ADD COLUMN geom geometry(LINESTRING,4326)
+
+
+UPDATE data_collected SET geom = ST_SetSRID (ST_MakeLine( ARRAY[ ST_MakePoint(Longitude_1,Latitude_1), ST_MakePoint(Long_1,Lat_1),ST_MakePoint(Long_2,Lat_2), ST_MakePoint(Longitude_2,Latitude_2) ]  ),4326);
+
+
+

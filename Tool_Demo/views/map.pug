@@ -1,0 +1,209 @@
+extends layout
+block content
+    h1 Progress Monitoring for Project 
+    a(href='https://docs.google.com/spreadsheets/d/1lXfSxFTlabIec9X_CpaA9V3B5jucjMaYGTCDi5QtG1Y/edit?usp=sharing' target='_blank') Click Here to see Data collected 
+    p To select the routes based on laying status:
+    form(action='/filter1')
+        select(name='name')
+            option(disabled='', selected='', value='') Select One...
+            each n in ["Yet to Start", "Laying in Progress", "Completed Laying"]
+                option(value=status) #{n}
+        input(type='submit', value='Submit')
+    p To select the routes based on cable drum number:
+    form(action='/filter2')
+        select(name='name')
+            option(disabled='', selected='', value='') Select One...
+            each i in [1,2,3,4]
+                option(value='CD00'+i) Cable Drum #{i}
+        input(type='submit', value='Submit')
+    
+
+    a(href="/map") Click here to reset the filter selection
+    
+    h2 Map for Progress Monitoring
+    #map
+    script.
+        var totalLength=0;
+        var arrayA=[];
+        var myData = !{JSON.stringify(jsonData)};
+        // Variable to hold map element and map initial settings 
+        var map = L.map('map',{ center: [12.991702,80.23368], zoom: 15});
+        // Add OpenStreetMap tile layer to map element
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        // Adding JSON to map
+        L.geoJson(myData,{
+            onEachFeature: function (feature, layer) {
+                
+            var routeControl=L.Routing.control({
+                show: false,
+                addWaypoints: false,
+                draggableWaypoints: false,
+                fitSelectedRoutes: false,
+                suppressWaypoints:true,
+                waypoints: [
+
+                    L.latLng(feature.properties.f6, feature.properties.f7),  
+                    L.latLng(feature.properties.f11, feature.properties.f12),
+                    L.latLng(feature.properties.f14, feature.properties.f15),
+ 
+
+                ],  				
+                lineOptions: {
+                    styles: [{color: 'blue',opacity:0.5,weight:8}]
+                },	
+                    createMarker: function(i, wp, nWps) {
+                    return L.marker(wp.latLng)
+                    .bindPopup(feature.properties.f3+ "<br> <b>Status:</b>" +feature.properties.f4 + "<br> <b>Start Point:</b>"  + feature.properties.f1 + "<br> <b>End Point:</b>" + feature.properties.f2 + "<br> <b>Date:</b>" + feature.properties.f5 );
+                },                });
+
+                routeControl.on('routesfound', function(e) {
+                  var summary = e.routes[0].summary;
+                  arrayA.push(feature.properties.f3,summary.totalDistance);
+                  totalLength+=summary.totalDistance;
+                console.log(arrayA);	
+
+                window.sessionStorage.setItem("arrayResults",JSON.stringify(arrayA));
+
+                document.getElementById("total").innerHTML=totalLength.toFixed(2);
+                for (var i=0; i<=arrayA.length+1;i+=1)
+                    for (var check=0; check<= ((arrayA.length)/2)-1;check+=1)
+                        if (document.getElementById("routeName"+check).innerHTML===arrayA[i])
+                            {document.getElementById("array"+check).innerHTML=arrayA[i+1];}						
+                }).addTo(map);			         
+            },
+
+
+        // Code for colours of linestrings
+        style: function(feature){
+        switch(feature.properties.f4){
+          case 'Yet to Start': return {color:'red',opacity:0.0001};
+          case 'Laying in Progress': return {color:'blue',opacity:0.0001};
+          case 'Completed Laying': return {color:'green',opacity:0.0001};
+          }
+        }
+        }).addTo(map);
+
+
+    // h2 Planned Map
+    #map1
+    script.
+        var arrayP=[];
+        var totalLength1=0;
+        var myData = !{JSON.stringify(jsonData)};
+        // Create variable to hold map element, give initial settings to map
+        var map1 = L.map('map1',{ center: [12.991702,80.23368], zoom: 15});
+        // Add OpenStreetMap tile layer to map element
+        // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map1);
+        // Add JSON to map
+        L.geoJson(myData,{
+            onEachFeature: function (feature, layer) {
+                var from=L.latLng({lat:feature.properties.f6,lng:feature.properties.f7});
+                var to=L.latLng({lat:feature.properties.f8,lng:feature.properties.f9});
+                var distanceReq=((from.distanceTo(to)).toFixed(0)/1);
+                var list= feature.properties.f3+ "<br> <b>Status:</b>" +feature.properties.f4 + "<br> <b>Start Point:</b>"  + feature.properties.f1 + "<br> <b>End Point:</b>" + feature.properties.f2 + "<br> <b>Date:</b>" + feature.properties.f5 + "<br> <b>Length Covered (in m):</b>";
+                layer.bindPopup(list+distanceReq);
+            var routeControl1=L.Routing.control({
+                show: false,
+                addWaypoints: false,
+                draggableWaypoints: false,
+                fitSelectedRoutes: false,
+                suppressWaypoints:true,
+                waypoints: [
+                    L.latLng(feature.properties.f6, feature.properties.f7),  
+                    L.latLng(feature.properties.f8, feature.properties.f9)],  
+                lineOptions: {
+                    styles: [{color: 'black',weight:1.5}]
+                },	
+                    createMarker: function(i, wp, nWps) {
+                    return L.marker(wp.latLng)
+                    .bindPopup(feature.properties.f3+ "<br> <b>Status:</b>" +feature.properties.f4 + "<br> <b>Start Point:</b>"  + feature.properties.f1 + "<br> <b>End Point:</b>" + feature.properties.f2 + "<br> <b>Date:</b>" + feature.properties.f5 );
+                }, 
+                });
+
+                routeControl1.on('routesfound', function(e) {
+                  var summary = e.routes[0].summary;
+                  arrayP.push(feature.properties.f3,summary.totalDistance);
+                  totalLength1+=summary.totalDistance;
+                console.log(arrayP);	
+                window.sessionStorage.setItem("arrayResults",JSON.stringify(arrayP));
+                
+                document.getElementById("total1").innerHTML=totalLength1.toFixed(2);
+                document.getElementById("percent").innerHTML=((totalLength/totalLength1)*100).toFixed(2);
+
+
+                for (var i=0; i<=arrayP.length;i+=1)
+                    for (var check=0; check<= ((arrayP.length)/2)-1;check+=1)
+                        if (document.getElementById("routeName"+check).innerHTML===arrayP[i])
+                            {document.getElementById("arrayT"+check).innerHTML=arrayP[i+1];}	
+                for (var j=0;j<=arrayP.length/2;j+=1)
+                    document.getElementById("percent" + j).innerHTML= ((document.getElementById("array" + j).innerHTML/document.getElementById("arrayT" + j).innerHTML)*100).toFixed(2);
+
+            }).addTo(map);
+            },  
+
+        style: function(feature){
+        switch(feature.properties.f4){
+          case 'Yet to Start': return {color:'red',opacity:0.0001};
+          case 'Laying in Progress': return {color:'blue',opacity:0.0001};
+          case 'Completed Laying': return {color:'green',opacity:0.0001};
+          }
+        }
+        }).addTo(map);
+        
+    
+    // p This shows the progress recorded as on 26 November 2020.	
+
+    p#resultArray0
+
+
+    #table
+
+        h2.ui.center.aligned.header Progress Calculation 
+        .ui.container
+        table.ui.celled.table.center.aligned
+         thead
+          tr
+            th Serial Number
+            th Cable Drum Number/ Route Name 
+            th Route Start
+            th Route End
+            th Status
+            th Length Laid (in m)
+            th Last modified on
+            th Total Length
+            th Percentage Progress (in %)
+          tbody
+            each feature,index in jsonData.features
+             tr
+                td #{index+1}
+                - for (i=index;i<=index;i++)
+                  td(id="routeName" + index) #{jsonData.features[index].properties.f3}
+                td #{jsonData.features[index].properties.f1}
+                td #{jsonData.features[index].properties.f2}
+                td #{jsonData.features[index].properties.f4}
+                - for (i=index;i<=index;i++)
+                  td(id="array" + index)
+                td #{jsonData.features[index].properties.f5}
+                - for (i=index;i<=index;i++)
+                  td(id="arrayT" + index)
+                - for (i=index;i<=index;i++)
+                  td(id="percent" + index)
+
+            tr
+                td
+                td
+                td
+                td
+                td Cumulative Length (in metres)
+                td#total 
+                td Cumulative Length (in metres)
+                td#total1
+                td#percent 
+	
+
+
+
+
+
+
+
