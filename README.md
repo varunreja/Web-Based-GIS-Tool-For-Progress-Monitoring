@@ -20,3 +20,7 @@ NOTE: The application was successfully found to be working on Microsoft Windows 
 
 ![cmd](https://user-images.githubusercontent.com/53266112/134956177-056246bb-14ca-44c2-82c8-215d20d811e1.PNG)
 
+Citation:
+
+Kindly Site this Paper as: 
+V. Thellakula, V.K. Reja, K. Varghese, “A Web-Based GIS Tool for Progress Monitoring of Linear Construction Projects”, Accepted in: 38th International Symposium on Automation and Robotics in Construction (ISARC 2021), Dubai, UAE 2021
