@@ -22,4 +22,4 @@ NOTE: The application was successfully found to be working on Microsoft Windows 
 
 Kindly Cite this Paper as:
 
-V. Thellakula, V.K. Reja, K. Varghese, “A Web-Based GIS Tool for Progress Monitoring of Linear Construction Projects”, Accepted in: 38th International Symposium on Automation and Robotics in Construction (ISARC 2021), Dubai, UAE 2021
+V. Thellakula, V.K. Reja, K. Varghese, “A Web-Based GIS Tool for Progress Monitoring of Linear Construction Projects”, Accepted in: 38th International Symposium on Automation and Robotics in Construction (ISARC 2021), Dubai, UAE 2021. https://doi.org/10.22260/ISARC2021/0007
